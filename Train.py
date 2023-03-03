@@ -83,7 +83,7 @@ History=model.fit_generator(
 
 model.save(output_model)
 lbinarizer=open(r"D:\Sports Video Classification\SportsVideoClassification\videoClassificationBinarizer.pickle","wb")
-lbinarizer.write(pickle.dumps(lbinarizer))
+lbinarizer.write(pickle.dumps(lb))
 lbinarizer.close()
 
 
