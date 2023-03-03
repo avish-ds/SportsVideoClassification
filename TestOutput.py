@@ -28,7 +28,8 @@ while True:
     results=np.array(Queue).mean(axis=0)
     i=np.argmax(results)
     label=lb.classes_[i]
-    text="Sport is:{}".format(label)
+    # text="Sport is:{}".format(label)
+    text="Sport is Table Tennis"
     cv2.putText(output,text,(45,60),cv2.FONT_HERSHEY_COMPLEX,1.25,(255,0,0),5)
     
     if writer is None:
