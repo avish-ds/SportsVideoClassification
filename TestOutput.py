@@ -29,12 +29,13 @@ while True:
     i=np.argmax(results)
     label=lb.classes_[i]
     text="Sport is:{}".format(label)
-    # print(text)
+    print(text)
     text="Sport is Table Tennis"
     cv2.putText(output,text,(45,60),cv2.FONT_HERSHEY_COMPLEX,1.25,(255,0,0),5)
     
     if writer is None:
         fourcc=cv2.VideoWriter_fourcc(*"MJPG")
+        
 
         writer=cv2.VideoWriter("outputVideo",fourcc,30,(Width,Height),True)
         writer.write(output)

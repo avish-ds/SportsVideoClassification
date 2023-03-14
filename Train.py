@@ -33,7 +33,7 @@ for images in pathToImages:
     if label not in sports_labels:
         continue
     image=cv2.imread(images)
-    image=cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
+    image=cv2.cvtColor(image,cv2.COLOR_BGR2RGB) 
     image=cv2.resize(image,(244,244))
     data.append(image)
     labels.append(label)
