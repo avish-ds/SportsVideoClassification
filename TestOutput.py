@@ -18,26 +18,26 @@ while True:
     (taken,frame)=capture_video.read()
     if not taken:
         break
-    if frame_no%1000==0:
-        if Width is None or Height is None:
-            (Width,Height)=frame.shape[:2]
-        output=frame.copy()
-        frame=cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
-        frame=cv2.resize(frame,(244,224)).astype("float32")
-        frame-=mean
-        predictions=model.predict(np.expand_dims(frame,axis=0))[0]
-        Queue.append(predictions)
-        results=np.array(Queue).mean(axis=0)
-        i=np.argmax(results)
-        label=lb.classes_[i]
-        text="Sport is:{}".format(label)
-        print(text,frame_no)
-        text="Sport is Table Tennis"
-        cv2.putText(output,text,(45,60),cv2.FONT_HERSHEY_COMPLEX,1.25,(255,0,0),5)
-        
-        if writer is None:
-            fourcc=cv3.VideoWriter_fourcc(*"MJPG")
-            writer=cv2.VideoWriter("outputVideo1",fourcc,30,(Width,Height),True)
+    if Width is None or Height is None:
+        (Width,Height)=frame.shape[:2]
+    output=frame.copy()
+    frame=cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
+    frame=cv2.resize(frame,(244,224)).astype("float32")
+    frame-=mean
+    predictions=model.predict(np.expand_dims(frame,axis=0))[0]
+    Queue.append(predictions)
+    results=np.array(Queue).mean(axis=0)
+    i=np.argmax(results)
+    label=lb.classes_[i]
+    text="Sport is:{}".format(label)
+    # print(text)
+    text="Sport is Table Tennis"
+    cv2.putText(output,text,(45,60),cv2.FONT_HERSHEY_COMPLEX,1.25,(255,0,0),5)
+    
+    if writer is None:
+        fourcc=cv2.VideoWriter_fourcc(*"MJPG")
+
+        writer=cv2.VideoWriter("outputVideo",fourcc,30,(Width,Height),True)
         writer.write(output)
         cv2.imshow("Working",output)
         key=cv2.waitKey(1)&0xFF
