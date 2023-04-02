@@ -6,7 +6,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import cv2
 from PyQt5.QtGui import QImage
 import numpy as np
-import ex3
+import TestOutput
 
 class SportsVideoClassification(QWidget):
     def __init__(self):
@@ -82,8 +82,9 @@ class SportsVideoClassification(QWidget):
         if file_path:
             self.input_path_textfield.setText(file_path)
             self.play_video(file_path)
-            ex3.set1()
+            # ex3.set1()
             self.labelTable.setItem(1,1,QtWidgets.QTableWidgetItem(str(self.item)))
+            TestOutput.process_video(file_path)
             self.labelTable.setItem(2,1,QtWidgets.QTableWidgetItem(str(self.item)))
 
 
