@@ -54,4 +54,4 @@ def process_video(path):
     print("Finalizing")
     writer.release()
     capture_video.release()
-process_video(r"C:\SportsVideoClassification\trainingVideos\video2q.mp4")
+process_video(r"C:\SportsVideoClassification\trainingVideos\video2.mp4")
