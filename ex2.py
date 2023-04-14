@@ -15,7 +15,7 @@ class SportsVideoClassification(QWidget):
     def __init__(self):
         super().__init__()
         self.resize(1300,590)
-        self.item=1234321
+        self.item=''
        
         self.setStyleSheet('background-color: #f2d8ee;')
         # UI elements for selecting and playing a video
@@ -34,7 +34,7 @@ class SportsVideoClassification(QWidget):
         self.line.setObjectName("line")
 
         self.line2 = QtWidgets.QFrame(self)
-        self.line2.setGeometry(QtCore.QRect(835, 0, 31, 571))
+        self.line2.setGeometry(QtCore.QRect(830, 0, 31, 571))
         self.line2.setSizeIncrement(QtCore.QSize(0, 0))
         self.line2.setFrameShape(QtWidgets.QFrame.VLine)
         self.line2.setFrameShadow(QtWidgets.QFrame.Sunken)
@@ -55,11 +55,11 @@ class SportsVideoClassification(QWidget):
         # UI elements for displaying and editing video classification
         self.labelTable = QTableWidget(self)
         self.labelTable.setColumnCount(2)
-        self.labelTable.setRowCount(3)
-        self.labelTable.setHorizontalHeaderLabels(['Sports label', 'Timings'])
+        self.labelTable.setRowCount(10)
+        self.labelTable.setHorizontalHeaderLabels(['Sports label', 'Timing'])
         self.labelTable.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.labelTable.verticalHeader().setVisible(False)
-        # self.labelTable.setEditTriggers(QTableWidget.NoEditTriggers)
+        self.labelTable.setEditTriggers(QTableWidget.NoEditTriggers)
         # self.input_path_button.setGeometry(QtCore.QRect(290, 490, 75, 23))
         self.labelTable.setGeometry(QtCore.QRect(440, 20, 401, 361))
 
@@ -84,9 +84,9 @@ class SportsVideoClassification(QWidget):
         # layout = QHBoxLayout(self)
         # layout.addWidget(splitter)
         # self.setLayout(layout)
-    def set_item(self):
-        self.labelTable.setItem(1,1,QtWidgets.QTableWidgetItem(str(1)))
-        print("yes")
+    def set_item(self,row,column,item):
+        self.labelTable.setItem(row,column,QtWidgets.QTableWidgetItem(str(item)))
+        # print("yes")
 
     def select_video(self):
         # Use QFileDialog to prompt the user to select a video file
@@ -133,6 +133,8 @@ class SportsVideoClassification(QWidget):
 
 
     def process_video(self,path):
+        row=0
+        column=0
         # ex2Object=SportsVideoClassification()
         model=load_model(r"D:\Sports Video Classification\SportsVideoClassification\videoClassificationModel")
         lb=pickle.loads(open(r"D:\Sports Video Classification\SportsVideoClassification\videoClassificationBinarizer.pickle","rb").read())
@@ -148,8 +150,8 @@ class SportsVideoClassification(QWidget):
             if not taken:
                 break
             if frame is None:
-                print("Frame is none")
-                continue
+                print("Video not supported")
+                return
             if frame_no%500==0:
                 if Width is None or Height is None:
                     (Width,Height)=frame.shape[:2]
@@ -164,6 +166,13 @@ class SportsVideoClassification(QWidget):
                 label=lb.classes_[i]
                 text="Sport is:{}".format(label)
                 print(text)
+                self.set_item(row,column,label)
+                column+=1
+                self.set_item(row,column,frame_no)
+                column=0
+                row+=1
+
+                
                 # ex2Object.display(taken,frame,Width,Height)
             
 

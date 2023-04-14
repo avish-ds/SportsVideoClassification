@@ -8,7 +8,7 @@ from imutils import paths
 from sklearn.preprocessing import LabelBinarizer
 from sklearn.model_selection import train_test_split
 from keras.preprocessing.image import ImageDataGenerator
-from sklearn.metrics import classification_report, roc_auc_score, roc_curve, accuracy_score, precision_score, recall_score, f1_score
+from sklearn.metrics import classification_report, roc_auc_score, roc_curve, accuracy_score, precision_score, recall_score, f1_score,confusion_matrix
 import matplotlib.pyplot as plt
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning, message=".*iCCP: known incorrect sRGB profile.*")
@@ -22,7 +22,7 @@ lb = pickle.loads(open(r"D:\Sports Video Classification\SportsVideoClassificatio
 
 # Load the test data
 data_path = r"D:\data"
-sports_labels = set(['boxing','swimming','table_tennis','cricket','football','hockey'])
+sports_labels = set(['boxing','swimming'])
 pathToImages = list(paths.list_images(data_path))
 data = []
 labels = []
@@ -52,17 +52,17 @@ f1_score = f1_score(y_true, y_pred, average='weighted')
 
 # Calculate ROC AUC score
 n_classes = len(lb.classes_)
-roc_auc_scores = []
-for i in range(n_classes):
-    roc_auc_scores.append(roc_auc_score(labels[:, i], predictions[:, i]))
-mean_roc_auc = np.mean(roc_auc_scores)
+# roc_auc_scores = []
+# for i in range(n_classes):
+#     roc_auc_scores.append(roc_auc_score(labels[:, i], predictions[:, i]))
+# mean_roc_auc = np.mean(roc_auc_scores)
 
 # Display the performance metrics
 print("Accuracy: {:.2f}%".format(accuracy * 100))
 print("Precision: {:.2f}%".format(precision * 100))
 print("Recall: {:.2f}%".format(recall * 100))
 print("F1 Score: {:.2f}%".format(f1_score * 100))
-print("ROC AUC: {:.2f}%".format(mean_roc_auc * 100))
+# print("ROC AUC: {:.2f}%".format(mean_roc_auc * 100))
 
 # Generate and display the classification report
 target_names = lb.classes_
@@ -70,10 +70,10 @@ print("Classification Report:")
 print(classification_report(y_true, y_pred, target_names=target_names))
 
 # Plot accuracy as a bar graph
-categories = lb.classes_
-accuracy_values = [accuracy * 100]
-plt.bar(categories, accuracy_values)
-plt.title('Accuracy')
-plt.xlabel('Categories')
-plt.ylabel('Accuracy (%)')
-plt.show()
+# categories = lb.classes_
+# accuracy_values = [accuracy * 100]
+# plt.bar(categories, accuracy_values)
+# plt.title('Accuracy')
+# plt.xlabel('Categories')
+# plt.ylabel('Accuracy (%)')
+# plt.show()
