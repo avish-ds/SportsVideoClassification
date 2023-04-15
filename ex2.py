@@ -85,12 +85,21 @@ class SportsVideoClassification(QWidget):
         # layout = QHBoxLayout(self)
         # layout.addWidget(splitter)
         # self.setLayout(layout)
+
+
+    def reset_ui(self):
+        self.video_player.clear()
+        self.video_player2.clear()
+        self.input_path_textfield.clear()
+        self.labelTable.clearSpans()
+    
     def set_item(self,row,column,item):
         self.labelTable.setItem(row,column,QtWidgets.QTableWidgetItem(str(item)))
         # print("yes")
 
     def select_video(self):
         # Use QFileDialog to prompt the user to select a video file
+        self.reset_ui()
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
         file_path, _ = QFileDialog.getOpenFileName(self,"Select Video File", "","Video Files (*.mp4 *.avi *.mkv *.mov *.flv *.wmv *.mpeg *.mpg *.3gp *.webm)", options=options)
@@ -99,8 +108,8 @@ class SportsVideoClassification(QWidget):
             
             # ex3.set1()
             self.labelTable.setItem(1,1,QtWidgets.QTableWidgetItem(str(self.item)))
-            self.process_video(file_path)
             self.play_video(file_path)
+            self.process_video(file_path)
             self.labelTable.setItem(2,1,QtWidgets.QTableWidgetItem(str(self.item)))
 
     
