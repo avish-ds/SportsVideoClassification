@@ -220,8 +220,8 @@ class SportsVideoClassification(QWidget):
                     break
             frame_no+=1
         print("Finalizing")
-        
-        writer.release()
+        if writer is not None:
+            writer.release()
         capture_video.release()
 
     
