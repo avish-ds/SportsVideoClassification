@@ -4,6 +4,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QFont
 from PyQt5 import QtCore, QtGui, QtWidgets
 import cv2
+import os
 from PyQt5.QtGui import QImage
 import numpy as np
 # import TestOutput
@@ -133,12 +134,21 @@ class SportsVideoClassification(QWidget):
 
 
     def process_video(self,path):
+
+
+        if os.path.exists(r"D:\\Sports Video Classification"):
+            base_dir = r"D:\Sports Video Classification\SportsVideoClassification"
+        elif os.path.exists(r"D:\\"):
+            base_dir = r"D:\SportsVideoClassification"
+        else:
+            base_dir=r"C:\SportsVideoClassification"
+
         row=0
         column=0
         # ex2Object=SportsVideoClassification()
-        model=load_model(r"D:\Sports Video Classification\SportsVideoClassification\videoClassificationModel")
-        lb=pickle.loads(open(r"D:\Sports Video Classification\SportsVideoClassification\videoClassificationBinarizer.pickle","rb").read())
-        outputVideo1=r"D:\SportsVideoClassification\SportsVideoClassification\outputVideos\output04.avi"
+        model=load_model(os.path.join(base_dir, "videoClassificationModel"))
+        lb=pickle.loads(open(os.path.join(base_dir, "videoClassificationBinarizer.pickle"),"rb").read())
+        outputVideo1=os.path.join(base_dir,"output04.avi")
         mean=np.array([123.68,116.779,103.939][::1],dtype="float32")
         Queue=deque(maxlen=128)
         capture_video=cv2.VideoCapture(path)
