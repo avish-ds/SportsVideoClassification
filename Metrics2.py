@@ -70,7 +70,7 @@ if len(unseen_labels) > 0:
 
 # Make predictions on the test data
 print("[INFO] Evaluating network...")
-predictions = model.predict(test_data, batch_size=15)
+predictions = model.predict(test_data, batch_size=36)
 
 # Convert the predictions to binary labels (0 or 1) based on threshold (e.g., 0.5)
 binary_predictions = np.argmax(predictions, axis=1)
