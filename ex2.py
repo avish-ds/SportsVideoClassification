@@ -109,7 +109,7 @@ class SportsVideoClassification(QWidget):
             # ex3.set1()
             self.labelTable.setItem(1,1,QtWidgets.QTableWidgetItem(str(self.item)))
             self.play_video(file_path)
-            self.process_video(file_path)
+            
             self.labelTable.setItem(2,1,QtWidgets.QTableWidgetItem(str(self.item)))
 
     
@@ -129,6 +129,7 @@ class SportsVideoClassification(QWidget):
             # self.video_player.setPixmap(q_img.scaled(self.video_player.width(), self.video_player.height(), Qt.KeepAspectRatio))   
         cap.release()
         QApplication.processEvents()
+        self.process_video(file_path)
     
     def display(self,taken,frame,width,height):
         
