@@ -1,4 +1,5 @@
 import os
+import tensorflow as tf
 import pickle
 import cv2
 import numpy as np
@@ -18,13 +19,15 @@ from keras.layers.core import Dropout
 from keras.models import Model
 from keras.models import load_model
 # Optimizer
-from keras.optimizers import gradient_descent_v2
+# from keras.optimizers import gradient_descent_v2
 
 # Determine the base directory path based on the current computer's file system
-if os.path.exists(r"D:\\"):
-    base_dir = r"D:\Sports Video Classification\SportsVideoClassification"
+if os.path.exists(r"D:\\Sports Video Classification"):
+            base_dir = r"D:\Sports Video Classification\SportsVideoClassification"
+elif os.path.exists(r"D:\\"):
+            base_dir = r"D:\SportsVideoClassification"
 else:
-    base_dir = r"C:\Sports Video Classification\SportsVideoClassification"
+            base_dir=r"C:\SportsVideoClassification"
 
 # Construct the complete file paths using the base directory path
 data_path = (r"D:\data")
