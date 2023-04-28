@@ -17,12 +17,12 @@ from keras.layers.core import Dropout
 from keras.models import Model
 
 #optimizer
-from keras.optimizers import gradient_descent_v2
+from keras.optimizers import gradient_descent_v2 
 
 data_path=r"D:\data"
 output_model=r"D:\Sports Video Classification\SportsVideoClassification\videoClassificationModel"
 output_binarizer=r"D:\Sports Video Classification\SportsVideoClassification\videoClassificationBinarizer"
-epoch=5
+epoch=20
 sports_labels=set(['boxing','swimming','table_tennis','cricket','football','hockey'])
 print("Images being loaded")
 pathToImages=list(paths.list_images(data_path))

@@ -45,7 +45,7 @@ for image_path in test_image_paths:
     image = cv2.imread(image_path)
     if image is not None:
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        image = cv2.resize(image, (224, 224))
+        image = cv2.resize(image, (244, 224))
         image = resnet.preprocess_input(image)
         test_data.append(image)
     else:

@@ -16,6 +16,7 @@ class SportsVideoClassification(QWidget):
     def __init__(self):
         super().__init__()
         self.resize(1300,590)
+        #self.reshape(binary_predictions, (-1, 1))
         self.item=''
        
         self.setStyleSheet('background-color: #f2d8ee;')
