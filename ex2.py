@@ -19,6 +19,13 @@ class SportsVideoClassification(QWidget):
         #self.reshape(binary_predictions, (-1, 1))
         self.item=''
         self.timer = QtCore.QTimer()
+        self.summary_text=''
+        self.output=[]
+        self.q_img=''
+        self.current_label=None
+        self.label=''
+        self.label_times={}
+        self.timing=''
        
         self.setStyleSheet('background-color: #f2d8ee;')
         # UI elements for selecting and playing a video
@@ -56,6 +63,14 @@ class SportsVideoClassification(QWidget):
         self.video_player = QLabel(self)
         self.video_player.setAlignment(Qt.AlignCenter)
         self.video_player.setGeometry(QtCore.QRect(10, 20, 420, 361))
+
+        self.image1 = QLabel(self)
+        self.image1.setAlignment(Qt.AlignCenter)
+        self.image1.setGeometry(QtCore.QRect(830, 400, 200, 200))
+
+        self.image2 = QLabel(self)
+        self.image2.setAlignment(Qt.AlignCenter)
+        self.image2.setGeometry(QtCore.QRect(1070, 400, 200, 200))
 
         self.video_player2 = QLabel(self)
         self.video_player2.setAlignment(Qt.AlignCenter)
@@ -218,29 +233,61 @@ class SportsVideoClassification(QWidget):
 
     #to display summary of the video labels
     def display_summary(self):
-        # Calculate the total time spent for each label
-        label_times = {}
+    # Calculate the total time spent for each label
+        self.label_times = {}
+        generated=set()
+        # self.current_label=None
         for row in range(self.labelTable.rowCount()):
-            label = self.labelTable.item(row, 0)
-            timing = self.labelTable.item(row, 1)
-            if label and timing:
-                label = label.text()
-                timing = float(timing.text())
-                if label in label_times:
-                    label_times[label] += timing
-                else:
-                    label_times[label] = timing
+            self.label = self.labelTable.item(row, 0)
+    
+            self.timing = self.labelTable.item(row, 1)
+            if self.label and self.timing:
+                self.label = self.label.text()
+                self.timing = float(self.timing.text())
+                time_seconds = self.timing
+                # if self.current_label is None or self.current_label!=self.label:
+                #     self.label_times[self.label] = time_seconds
+                # else:
+                #     self.label_times[self.label] = time_seconds
+                #     self.current_label=self.label
+                if self.current_label is None or self.current_label != self.label:
+                    self.label_times[self.label] = time_seconds
+                    if self.label not in generated:
+                        print("New label generated:", self.label)
+                        generated.add(self.label)
+                        self.update_frame()
+                    # self.update_frame()
+                    self.current_label = self.label
 
-        # Display the summary in a message box
-        summary_text = 'Summary:\n'
-        for label, timing in label_times.items():
-            summary_text += f'{label}: {timing:.2f} seconds\n'
-        summary_box = QMessageBox()
-        summary_box.setWindowTitle('Summary of input video')
-        summary_box.setIcon(QMessageBox.Information)
-        summary_box.setDefaultButton(QMessageBox.Close)
-        summary_box.setText(summary_text)
-        summary_box.exec_()
+                    
+                    # self.update_frame()
+                # if self.current_label==None:
+                #     self.image1.setPixmap(self.q_img.scaled(self.image1.width(), self.image1.height(), Qt.KeepAspectRatio))
+                #     self.current_label=self.label
+    # Display the summary in a message box
+        self.summary_text = 'Summary:\n'
+        summary_list=list(self.label_times.values())
+        empty=[0]*len(summary_list)
+        for i in range(len(summary_list)):
+            if i==0:
+                empty[i]=summary_list[i]
+            else:
+                empty[i]=summary_list[i]-summary_list[i-1]
+
+        j=0
+        for self.label, self.timing in self.label_times.items():
+            self.summary_text += f'{self.label}: {empty[j]:.2f} seconds\n'
+            j+=1
+        
+
+        
+    def update_frame(self):
+        if self.image1.pixmap() is None:
+            self.image1.setPixmap(self.q_img.scaled(self.image1.width(), self.image1.height(), Qt.KeepAspectRatio))
+        elif  self.image2.pixmap() is None:
+            self.image2.setPixmap(self.q_img.scaled(self.image2.width(), self.image2.height(), Qt.KeepAspectRatio))
+        self.current_label=self.label
+
 
 
 
@@ -263,6 +310,8 @@ class SportsVideoClassification(QWidget):
         mean=np.array([123.68,116.779,103.939][::1],dtype="float32")
         Queue=deque(maxlen=128)
         capture_video=cv2.VideoCapture(path)
+        frame_rate = capture_video.get(cv2.CAP_PROP_FPS)
+
         writer=None
         (Width,Height)=(None,None)
         frame_no=1
@@ -276,7 +325,7 @@ class SportsVideoClassification(QWidget):
             if frame_no%288==0:
                 if Width is None or Height is None:
                     (Width,Height)=frame.shape[:2]
-                output=frame.copy()
+                self.output=frame.copy()
                 frame=cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
                 frame=cv2.resize(frame,(244,224)).astype("float32")
                 frame-=mean
@@ -284,12 +333,12 @@ class SportsVideoClassification(QWidget):
                 Queue.append(predictions)
                 results=np.array(Queue).mean(axis=0)
                 i=np.argmax(results)
-                label=lb.classes_[i]
-                text="Sport is:{}".format(label)
-                print(text)
-                self.set_item(row,column,label)
+                label1=lb.classes_[i]
+                text="Sport is:{}".format(label1)
+                # print(text)
+                self.set_item(row,column,label1)
                 column+=1
-                self.set_item(row,column,frame_no/24)
+                self.set_item(row,column,frame_no/frame_rate)
                 column=0
                 row+=1
 
@@ -306,7 +355,7 @@ class SportsVideoClassification(QWidget):
                 # obj=SportsVideoClassification()
                 # obj.item="Sport is Table Tennis"
                 # print(text)
-                cv2.putText(output,text,(45,60),cv2.FONT_HERSHEY_COMPLEX,1.25,(255,0,0),5)
+                cv2.putText(self.output,text,(45,60),cv2.FONT_HERSHEY_COMPLEX,1.25,(255,0,0),5)
     
                 if writer is None:
                     fourcc=cv2.VideoWriter_fourcc(*"mp4v")
@@ -314,13 +363,15 @@ class SportsVideoClassification(QWidget):
                     if writer is None:
                         print("Video not supported!")
                         return
-                writer.write(output)
+                writer.write(self.output)
                 # cv2.imshow("Working",output)
                 bytes_per_line = 3 * Width
-                output = cv2.resize(output, (self.video_player2.width(), self.video_player2.height()))
-                q_img = QPixmap.fromImage(QImage(output.data, output.shape[1], output.shape[0], output.strides[0], QImage.Format_RGB888))
-                self.video_player2.setPixmap(q_img.scaled(self.video_player.width(), self.video_player.height(), Qt.KeepAspectRatio))
+                self.output = cv2.resize(self.output, (self.video_player2.width(), self.video_player2.height()))
+                self.q_img = QPixmap.fromImage(QImage(self.output.data, self.output.shape[1], self.output.shape[0], self.output.strides[0], QImage.Format_RGB888))
+                self.video_player2.setPixmap(self.q_img.scaled(self.video_player.width(), self.video_player.height(), Qt.KeepAspectRatio))
+                self.display_summary()
                 QApplication.processEvents()
+                
 
 
                 
@@ -335,7 +386,14 @@ class SportsVideoClassification(QWidget):
             writer.release()
         capture_video.release()
         self.reset_button.setEnabled(True)
-        self.display_summary()
+        # self.display_summary()
+        summary_box = QMessageBox()
+        summary_box.setWindowTitle('Summary of input video')
+        summary_box.setIcon(QMessageBox.Information)
+        summary_box.setDefaultButton(QMessageBox.Close)
+        summary_box.setText(self.summary_text)
+        summary_box.exec_()
+        
 
     
   
