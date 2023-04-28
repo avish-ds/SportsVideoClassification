@@ -273,7 +273,7 @@ class SportsVideoClassification(QWidget):
             if frame is None:
                 print("Video not supported")
                 return
-            if frame_no%500==0:
+            if frame_no%100==0:
                 if Width is None or Height is None:
                     (Width,Height)=frame.shape[:2]
                 output=frame.copy()
