@@ -64,7 +64,7 @@ class SportsVideoClassification(QWidget):
         # UI elements for displaying and editing video classification
         self.labelTable = QTableWidget(self)
         self.labelTable.setColumnCount(2)
-        self.labelTable.setRowCount(10)
+        self.labelTable.setRowCount(100)
         self.labelTable.setHorizontalHeaderLabels(['Sports label', 'Timing(seconds)'])
         self.labelTable.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.labelTable.verticalHeader().setVisible(False)
@@ -273,7 +273,7 @@ class SportsVideoClassification(QWidget):
             if frame is None:
                 print("Video not supported")
                 return
-            if frame_no%100==0:
+            if frame_no%288==0:
                 if Width is None or Height is None:
                     (Width,Height)=frame.shape[:2]
                 output=frame.copy()
