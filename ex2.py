@@ -66,11 +66,11 @@ class SportsVideoClassification(QWidget):
 
         self.image1 = QLabel(self)
         self.image1.setAlignment(Qt.AlignCenter)
-        self.image1.setGeometry(QtCore.QRect(830, 400, 200, 200))
+        self.image1.setGeometry(QtCore.QRect(860, 400, 200, 200))
 
         self.image2 = QLabel(self)
         self.image2.setAlignment(Qt.AlignCenter)
-        self.image2.setGeometry(QtCore.QRect(1070, 400, 200, 200))
+        self.image2.setGeometry(QtCore.QRect(1080, 400, 200, 200))
 
         self.video_player2 = QLabel(self)
         self.video_player2.setAlignment(Qt.AlignCenter)
@@ -117,9 +117,13 @@ class SportsVideoClassification(QWidget):
         self.labelTable.clearContents()
         self.timer.stop()
         self.reset_button.setEnabled(False)
+        self.image1.clear()
+        self.image2.clear()
     
     def set_item(self,row,column,item):
         self.labelTable.setItem(row,column,QtWidgets.QTableWidgetItem(str(item)))
+        # self.labelTable.setItem(row, column, QTableWidgetItem("{:.2f}".format(float(item))))
+
         # print("yes")
 
     def select_video(self):
@@ -258,6 +262,8 @@ class SportsVideoClassification(QWidget):
                         self.update_frame()
                     # self.update_frame()
                     self.current_label = self.label
+                elif self.current_label==self.label:
+                    self.label_times[self.label]=time_seconds
 
                     
                     # self.update_frame()
@@ -268,6 +274,7 @@ class SportsVideoClassification(QWidget):
         self.summary_text = 'Summary:\n'
         summary_list=list(self.label_times.values())
         empty=[0]*len(summary_list)
+        print("Summary:",summary_list)
         for i in range(len(summary_list)):
             if i==0:
                 empty[i]=summary_list[i]
@@ -275,6 +282,7 @@ class SportsVideoClassification(QWidget):
                 empty[i]=summary_list[i]-summary_list[i-1]
 
         j=0
+        print("Empty",empty)
         for self.label, self.timing in self.label_times.items():
             self.summary_text += f'{self.label}: {empty[j]:.2f} seconds\n'
             j+=1
@@ -338,7 +346,15 @@ class SportsVideoClassification(QWidget):
                 # print(text)
                 self.set_item(row,column,label1)
                 column+=1
-                self.set_item(row,column,frame_no/frame_rate)
+                # self.set_item(row,column,frame_no/frame_rate)
+                seconds = capture_video.get(cv2.CAP_PROP_POS_MSEC) / 1000
+                minutes = int(seconds / 60)
+                seconds %= 60
+                # self.set_item(row, column, {minutes:02f}:{seconds:02f})
+                # self.set_item(row, column, "{:02d}:{:02d}".format(int(minutes), int(seconds)))
+
+
+                self.set_item(row,column,capture_video.get(cv2.CAP_PROP_POS_MSEC)/1000)
                 column=0
                 row+=1
 
