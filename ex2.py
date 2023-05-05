@@ -218,29 +218,30 @@ class SportsVideoClassification(QWidget):
 
     #to display summary of the video labels
     def display_summary(self):
-        # Calculate the total time spent for each label
+    # Calculate the total time spent for each label
         label_times = {}
         for row in range(self.labelTable.rowCount()):
-            label = self.labelTable.item(row, 0)
-            timing = self.labelTable.item(row, 1)
-            if label and timing:
-                label = label.text()
-                timing = float(timing.text())
+            label_item = self.labelTable.item(row, 0)
+            start_time_item = self.labelTable.item(row, 1)
+            if label_item and start_time_item:
+                label = label_item.text()
+                start_time_item = int(float(start_time_item.text()))
                 if label in label_times:
-                    label_times[label] += timing
+                    label_times[label] += 12
                 else:
-                    label_times[label] = timing
+                    label_times[label] = 0
 
-        # Display the summary in a message box
+    # Display the summary in a message box
         summary_text = 'Summary:\n'
         for label, timing in label_times.items():
-            summary_text += f'{label}: {timing:.2f} seconds\n'
+            summary_text += f'{label}: {(timing/60):.2f} minutes\n'
         summary_box = QMessageBox()
         summary_box.setWindowTitle('Summary of input video')
         summary_box.setIcon(QMessageBox.Information)
         summary_box.setDefaultButton(QMessageBox.Close)
         summary_box.setText(summary_text)
         summary_box.exec_()
+
 
 
 
